@@ -1,0 +1,38 @@
+<section class="section">
+    <div class="container">
+        <h1 class="title">Dog Coupon</h1>
+        <h2 class="subtitle">
+            Gain coins and use them for coupons.
+        </h2>
+    </div>
+</section>
+
+<table class="table is-bordered is-striped is-hoverable is-fullwidth is-6" id="content">
+
+    
+</table>
+
+<script>
+    async function fetchData() {
+        var response = await fetch("/users/" + "<%= couponid %>");
+
+        if (response.ok) {
+            var data = await response.json();
+            var users = data.users;
+
+            var dynamicCode = "<tr><th>ID</th><th>Username</th><th>Role</th></tr><tr>";
+
+            users.forEach(function (user) {
+                dynamicCode += 
+                    "<td>" + user.id + "</td>" +
+                    "<td>" + user.username + "</td>" + 
+                    "<td>" + user.role + "</td></tr>";
+            });
+            document.querySelector("#content").innerHTML = dynamicCode;
+        } else {
+            alert(msg);
+        }
+    }
+
+    fetchData();
+</script>

@@ -1,0 +1,61 @@
+<div class="columns is-mobile is-centered">
+    <div class="tile is-ancestor column is-6">
+        <div class="tile is-vertical is-parent">
+            <div class="tile is-child box" style="background-color: rgb(211, 162, 29);">
+                <p class="title">Login <span class="title is-5">for Dog Coupon</span></p>
+
+                <form action="/login" method="post" onsubmit="submitForm(this); return false;">
+                    <div class="container columns">
+                        <div class="column is-full">
+                            <div class="field" id="username_div">
+                                <label class="label">Username</label>
+                                <p class="control has-icons-left has-icons-right">
+                                    <input class="input" name="username" id="username" type="username"
+                                        placeholder="Username" required>
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                </p>
+                                <p class="help is-danger" id="login_helper"></p>
+                            </div>
+
+                            <div class="field" id="password_div">
+                                <label class="label">Password</label>
+                                <p class="control has-icons-left">
+                                    <input class="input" name="password" id="password" type="password"
+                                        placeholder="Password" required>
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="button is-warning">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function submitForm(formElem) {
+        var response = await fetch(formElem.action, {
+            method: formElem.method,
+            body: new FormData(formElem),
+        });
+
+        if (response.ok) {
+            var user = await response.json();
+            location.assign("/");
+        } else if (response.status == 401) {
+            var msg = await response.json();
+
+            document.getElementById("username").className = "input is-danger";
+            document.getElementById("password").className = "input is-danger";
+            document.getElementById("login_helper").innerHTML = msg;
+        }else {
+            alert(response.statusText);
+        }
+    };
+</script>

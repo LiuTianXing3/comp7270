@@ -1,0 +1,70 @@
+<section class="section">
+    <div class="container">
+        <h1 class="title">Dog Coupon</h1>
+        <h2 class="subtitle">
+            Gain coins and use them for coupons.
+        </h2>
+    </div>
+</section>
+
+<h3 class="title is-4">Redeemed coupons</h3>
+<div id="balance"></div>
+<br>
+<div class="columns is-multiline" id="content"></div>
+
+<script>
+    async function fetchData() {
+        var response = await fetch("/coupons?userid=" + "<%= userid %>");
+
+        if (response.ok) {
+            var multi = await response.json();
+            var coupons = multi.coupons;
+            var balance = multi.balance;
+
+            var dynamicCode = "";
+
+            var dynamicCode1 = 
+            '<div class="column is-one-third">' + 
+                '<div class="card">' + 
+                    '<div class="card-image">' + 
+                        '<figure class="image is-4by3">' + 
+                            '<img style="object-fit:cover" src="';
+            
+            var dynamicCode2 =
+                        '</figure>' + 
+                    '</div>' + 
+                    '<div class="card-content">' + 
+                        '<div class="content">' + 
+                            '<h2 class="title has-text-warning">' + 
+                                '<a class="has-text-warning" href="/details/';
+            var dynamicCode3 =
+                            '</p>' + 
+                        '</div>' + 
+                    '</div>' + 
+                '</div>' + 
+            '</div>';
+
+            coupons.forEach(function (coupon) {
+                dynamicCode += 
+                dynamicCode1 + coupon.image + '" alt="Restaurant image">' + 
+                dynamicCode2 + coupon.id + '">' + 
+                coupon.restaurant + 
+                                '</a>' + 
+                            '</h2>' + 
+                            '<p>' + coupon.detail + '</p>' + 
+                            '<p>' + 
+                                '<b>Expire at: </b>' + 
+                                coupon.expire + 
+                dynamicCode3;
+            });
+            document.querySelector("#content").innerHTML = dynamicCode;
+
+            dynamicCodeBalance = "<h5 class='title is-5'>My coin balance: <span class='icon'><i class='fas fa-coins'></i></span>" + balance + "</h3>";
+            document.querySelector("#balance").innerHTML = dynamicCodeBalance;
+        } else {
+            alert(msg);
+        }
+    }
+
+    fetchData();
+</script>

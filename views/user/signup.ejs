@@ -1,0 +1,164 @@
+<div class="columns is-mobile is-centered">
+    <div class="tile is-ancestor column is-6">
+        <div class="tile is-vertical is-parent">
+            <div class="tile is-child box" style="background-color: rgb(211, 162, 29);">
+                <p class="title">Sign Up <span class="title is-5">for Dog Coupon</span></p>
+                <p class="title is-6">Fill in the form and join us immediately.</p>
+
+                <form action="/signup" method="post" onsubmit="submitForm(this); return false;">
+                    <div class="container columns">
+                        <div class="column is-full">
+                            <div class="field" id="username_div">
+                                <label class="label">Username</label>
+                                <p class="control has-icons-left has-icons-right">
+                                    <input class="input" name="username" id="username" type="username"
+                                        placeholder="Username" onblur="checkUser()">
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                </p>
+                            
+                            </div>
+
+                            <div class="field" id="password_div">
+                                <label class="label">Password</label>
+                                <p class="control has-icons-left">
+                                    <input class="input" name="password" id="password" type="password"
+                                        placeholder="Password" onblur="checkPassword()">
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="button is-warning">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // for ajax
+    function parseJSON(response) {
+        return response.json();
+    }
+
+    function checkStatus(response) {
+        if (response.status >= 200 && response.status < 300) {
+            return response;
+        } else {
+            var error = new Error(response.statusText);
+            error.response = response;
+            throw error;
+        }
+    }
+
+    // ajax checking if the user was existed
+    async function checkUserExist() {
+        var username = document.getElementById("username");
+        var usrname_helper = document.getElementById("username_helper");
+        var userJSON;
+
+        var user = await fetch("/user/search?username=" + username.value)
+            .then(checkStatus)
+            .then(parseJSON)
+            .then(function (data) {
+                userJSON = data
+            });
+
+        if (!(userJSON === "")) {
+            username.className = "input is-danger";
+            usrname_helper.innerText = "The username is existed.";
+            usrname_helper.className = "help is-danger";
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    // form check for user-input
+    function checkUser() {
+        var username = document.getElementById("username");
+        var usrname_helper = document.getElementById("username_helper");
+        var pattern = /^\w{1,16}$/;
+
+        var result = checkUserExist().then(result => {
+            userExistCheckResult = result;
+
+            if (username.value === "") {
+                username.className = "input is-danger";
+                usrname_helper.className = "help is-danger";
+
+                usrname_helper.innerText = "The username should not be empty.";
+                return false;
+            } else if (!pattern.test(username.value)) {
+                username.className = "input is-danger";
+                usrname_helper.className = "help is-danger";
+
+                usrname_helper.innerText = "The username format is illegal. It should only contain letters, numbers and downscores(i.e. A-Z; a-z; 0-9; _ ).";
+                return false;
+            } else if (!userExistCheckResult) {
+                return false;
+            } else {
+                username.className = "input";
+                usrname_helper.className = "help is-success";
+
+                usrname_helper.innerText = "This username is available.";
+                return true;
+            }
+        }).then(json => {return json});
+        return result;
+    }
+
+    // form check for password-input
+    function checkPassword() {
+        var password = document.getElementById("password");
+        var password_helper = document.getElementById("password_helper");
+        var pattern = /^\w{6,16}$/;
+
+        if (password.value === "") {
+            password.className = "input is-danger";
+            password_helper.className = "help is-danger";
+
+            password_helper.innerText = "The password should not be empty.";
+            return false;
+        } else if (!pattern.test(password.value)) {
+            password.className = "input is-danger";
+            password_helper.className = "help is-danger";
+
+            password_helper.innerText = "The password format is illegall. It can only contain letters, numbers and downscores(i.e. A-Z; a-z; 0-9; _ ). And the password should be at least 6 characters and no more than 16 characters.";
+            return false;
+        } else {
+            password.className = "input";
+            password_helper.className = "help has-text-grey-light";
+
+            password_helper.innerText = "The password can only contain letters, numbers and downscores(i.e. A-Z; a-z; 0-9; _ ). And the password should be at least 6 characters and no more than 16 characters.";
+            return true;
+        }
+    }
+
+    // final test for the form check
+    function checkForm() {
+        var result = checkUser().then(result => {
+            return result && checkPassword();
+        });
+        return result;
+    }
+
+    // set form do not submit by default
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+    })
+
+    // if the final test goes true, then submit the form by JS
+    function submitForm(form) {
+        checkForm().then(result => {
+            if (result) {
+                form.submit();
+            }
+        })
+    }
+</script>

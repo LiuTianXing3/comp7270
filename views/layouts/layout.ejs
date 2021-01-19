@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dog Coupon</title>
+
+    <!-- Viewport mobile tag for sensible mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <% /* If you want to discourage search engines from indexing this site, uncomment the following line: */%>
+        <% /* <meta name="robots" content="noindex"> */%>
+
+
+            <!--
+        Stylesheets and Preprocessors
+        ==============================
+
+        You can always bring in CSS files manually with `<link>` tags, or asynchronously
+        using a solution like AMD (RequireJS).  Or, if you like, you can take advantage
+        of Sails' conventional asset pipeline (boilerplate Gruntfile).
+
+        By default, stylesheets from your `assets/styles` folder are included
+        here automatically (between STYLES and STYLES END). Both CSS (.css) and LESS (.less)
+        are supported. In production, your styles will be minified and concatenated into
+        a single file.
+
+        To customize any part of the built-in behavior, just edit `tasks/pipeline.js`.
+        For example, here are a few things you could do:
+
+            + Change the order of your CSS files
+            + Import stylesheets from other directories
+            + Use a different or additional preprocessor, like SASS, SCSS or Stylus
+        -->
+
+            <!--STYLES-->
+            <link rel="stylesheet" href="/styles/importer.css">
+            <!--STYLES END-->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+
+            <link rel="icon" href="img/dog.png" type="image/x-icon" />
+            <link rel="shortcut icon" href="img/dog.png" type="image/x-icon" />
+            <link rel="bookmark" href="img/dog.png" type="image/x-icon" />
+</head>
+
+<body>
+    <!--TEMPLATES Navbar-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+
+    <% var username=req.session.username; %>
+        <% var userrole=req.session.userrole; %>
+            <% if (!username) {%>
+                <nav class="navbar ">
+                    <div class="navbar-brand">
+                        <a class="navbar-item" href="/">
+                            <img src="/images/dog.png">
+                        </a>
+                        <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+
+                    <div id="navbar-main" class="navbar-menu">
+                        <div class="navbar-start">
+                            <a class="navbar-item" href="/">
+                                Home
+                            </a>
+                            <a class="navbar-item" href="/search">
+                                Search
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <div class="field is-grouped">
+                                <p class="control">
+                                    <a class="bd-tw-button button" href="/signup">
+
+                                        <i class="fas fa-user-plus"></i>
+
+                                        <span style="color: rebeccapurple;">
+                                            Sign Up
+                                        </span>
+                                    </a>
+                                </p>
+                                <p class="control">
+                                    <a class="button is-dark" href="/login">
+
+                                        <i class="fas fa-sign-in-alt"></i>
+
+                                        <span>Login</span>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </nav>
+                <% } else if (userrole==="admin" ) { %>
+                    <nav class="navbar ">
+                        <div class="navbar-brand">
+                            <a class="navbar-item" href="/">
+                                <img src="/images/dog.png">
+                            </a>
+                            <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+
+                        <div id="navbar-main" class="navbar-menu">
+                            <div class="navbar-start">
+                                <a class="navbar-item" href="/">
+                                    Home
+                                </a>
+                                <a class="navbar-item" href="/search">
+                                    Search
+                                </a>
+                                <a class="navbar-item" href="/create">
+                                    Create
+                                </a>
+                                <a class="navbar-item" href="/admin">
+                                    Admin
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="navbar-end">
+                            <div class="navbar-item">
+                                <div class="field is-grouped">
+                                    <p class="navbar-item">
+                                        Hi, <%= username %>
+                                    </p>
+                                    <p class="control">
+                                        <a class="button is-dark" href="/logout">
+
+                                            <i class="fas sign-out-alt"></i>
+
+                                            <span>Logout</span>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </nav>
+                    <% } else {%>
+                        <nav class="navbar ">
+                            <div class="navbar-brand">
+                                <a class="navbar-item" href="/">
+                                    <img src="/images/dog.png">
+                                </a>
+                                <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+
+                            <div id="navbar-main" class="navbar-menu">
+                                <div class="navbar-start">
+                                    <a class="navbar-item" href="/">
+                                        Home
+                                    </a>
+                                    <a class="navbar-item" href="/search">
+                                        Search
+                                    </a>
+                                    <a class="navbar-item" href="/coupons">
+                                        My Redeemed Coupons
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="navbar-end">
+                                <div class="navbar-item">
+                                    <div class="field is-grouped">
+                                        <p class="navbar-item">
+                                            Hi, <%= username %>.
+                                        </p>
+                                        <p class="control">
+                                            <a class="button is-dark" href="/logout">
+
+                                                <i class="fas sign-out-alt"></i>
+
+                                                <span>Logout</span>
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </nav>
+                        <% } %>
+                            <!--TEMPLATES END-->
+
+                            <section class="section">
+                                <%- body %>
+                            </section>
+                            <!--SCRIPTS-->
+                            <script src="/dependencies/sails.io.js"></script>
+                            <!--SCRIPTS END-->
+</body>
+
+</html>

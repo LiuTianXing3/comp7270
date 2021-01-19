@@ -1,0 +1,62 @@
+<% var username = req.session.username; %>
+<% var redeemValidation = redeemValidation;%>
+<% var quota = coupon.quota;%>
+<div class="container columns">
+    <div class="column is-two-thirds">
+        <figure class="image is-4by3">
+            <img style="object-fit:cover" src="<%= coupon.image%>" alt="Restaurant image">
+        </figure>
+    </div>
+    
+    <div class="column is-one-third">
+        <div class="tile is-parent">
+            <article class="tile is-child notification is-warning">
+                <div class="content">
+                    <h3 class="title is-3">
+                        <%= coupon.title%>
+                    </h3>
+                    <br>
+                    <p class="subtitle">
+                        <b>Restaurant:</b> <%= coupon.restaurant%>
+                    </p>
+                    <p class="subtitle">
+                        <b>Region:</b> <%= coupon.region%>
+                    </p>
+                    <p class="subtitle">
+                        <b>Mall:</b> <%= coupon.mall%>
+                    </p>
+                    <p class="subtitle">
+                        <b>Quota:</b> <%= coupon.quota%>
+                    </p>
+                    <p class="subtitle">
+                        <span class="icon">
+                            <i class="fas fa-coins"></i>
+                        </span>
+                        : <%= coupon.coins%>
+                    </p>
+                    <p class="subtitle">
+                        <b>Expire Date:</b> <%= coupon.expire%>
+                    </p>
+                    <div class="content">
+                        <%= coupon.detail%>
+                    </div>
+                    <% if (quota <= 0) { %>
+                        <button class="button" disabled=true">Redeem it!</button>
+                    <% } else if (!username) {%>
+                        <button class="button" onclick="loginCheckFail()">Redeem it!</button>
+                    <% } else if (!redeemValidation) {%>
+                        <button class="button" disabled=true">Redeem it!</button>
+                    <% } else { %>
+                        <button class="button" onclick="window.location.href='/redeem/<%=req.params.id%>'">Redeem it!</button>
+                    <% } %>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loginCheckFail() {
+        alert("Please log in!");
+    }
+</script>

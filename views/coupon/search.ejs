@@ -1,0 +1,268 @@
+<section class="section">
+    <div class="container">
+        <h1 class="title">Dog Coupon</h1>
+        <h2 class="subtitle">
+            Gain coins and use them for coupons.
+        </h2>
+    </div>
+</section>
+
+<div class="columns">
+    <div class="column is-two-thirds">
+        <div class="columns" id="content">
+
+        </div>
+    </div>
+    <div class="column is-one-third">
+        <form action="/ajaxSearch" method="GET" onsubmit="submitForm(this); return false;">
+            <div class="field">
+                <label class="label">Region</label>
+                <div class="control">
+                    <div class="select">
+                        <select id="region" name="region">
+                            <option value="">No Specified Region</option>
+                            <option value="Kowloon">Kowloon</option>
+                            <option value="Hong Kong Island">Hong Kong Island</option>
+                            <option value="New Territories">New Territories</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Min Coins</label>
+                <div class="control">
+                    <input id="coinsMin" name="coinsMin" class="input" type="number" min=1 placeholder="Minimum Coins">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Max Coins</label>
+                <div class="control">
+                    <input id="coinsMax" name="coinsMax" class="input" type="number" min=1 placeholder="Maximum Coins">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Expire Date</label>
+                <p class="control has-icons-right">
+                    <input id="expire" name="expire" class="input" type="text" placeholder="DD/MM/YYYY">
+                    <span class="icon is-small is-right">
+                        <i class="fas fa-calendar-minus"></i>
+                    </span>
+                </p>
+            </div>
+
+            <button type="submit" class="button is-warning">Search</button>
+        </form>
+    </div>
+</div>
+<div class="container columns">
+    <div class="column is-two-thirds">
+        <nav class="pagination" role="navigation" aria-label="pagination">
+            <button class="button pagination-previous" id="previousButton">Previous</button>
+            <button class="button pagination-next" id="nextButton">Next page</button>
+            <ul class="pagination-list">
+                <li>
+                    <a class="pagination-link" id="firstLink">1</a>
+                </li>
+                <li>
+                    <span class="pagination-ellipsis">&hellip;</span>
+                </li>
+                <li>
+                    <a class="pagination-link" id="previousLink">45</a>
+                </li>
+                <li>
+                    <a style="border-color: #79ff57" class="pagination-link is-current has-background-warning has-text-black" id="currentLink">46</a>
+                </li>
+                <li>
+                    <a class="pagination-link" id="nextLink">47</a>
+                </li>
+                <li>
+                    <span class="pagination-ellipsis">&hellip;</span>
+                </li>
+                <li>
+                    <a class="pagination-link" id="lastLink">86</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<script>
+
+    function setAjaxPagination(limit, offset, currentCuponSettings, count) {
+        var previousButton = document.getElementById("previousButton");
+        var nextButton = document.getElementById("nextButton");
+        var currentLink = document.getElementById("currentLink");
+        var previousLink = document.getElementById("previousLink");
+        var nextLink = document.getElementById("nextLink");
+        var firstLink = document.getElementById("firstLink");
+        var lastLink = document.getElementById("lastLink");
+
+        var numOfRecords;
+
+        if (!count) {
+            numOfRecords = parseInt("<%= numOfRecords %>");
+        } else {
+            numOfRecords = count;
+        }
+
+        firstLink.onclick = function () { fetchPage(limit, 0, currentCuponSettings) };
+        previousButton.onclick = function () { fetchPage(limit, offset - limit, currentCuponSettings) };
+        previousLink.onclick = function () { fetchPage(limit, offset - limit, currentCuponSettings) };
+        currentLink.onclick = function () { fetchPage(limit, offset, currentCuponSettings) };
+        nextLink.onclick = function () { fetchPage(limit, offset + limit, currentCuponSettings) };
+        nextButton.onclick = function () { fetchPage(limit, offset + limit, currentCuponSettings) };
+        lastLink.onclick = function () { fetchPage(limit, (Math.ceil(numOfRecords / limit) - 1) * limit, currentCuponSettings) };
+
+
+        var currentPageNumber = Math.floor(offset / limit) + 1;
+
+        previousLink.innerHTML = currentPageNumber - 1;
+        currentLink.innerHTML = currentPageNumber;
+        nextLink.innerHTML = currentPageNumber + 1;
+        lastLink.innerHTML = Math.ceil(numOfRecords / limit);
+
+        if (offset < limit) {
+            previousButton.setAttribute("disabled", true);
+            previousButton.href = "";
+            previousLink.style.display = "none";
+        } else {
+            previousButton.removeAttribute("disabled");
+            previousLink.style.display = "block";
+        }
+
+        if (offset + limit >= numOfRecords) {
+            nextButton.setAttribute("disabled", true);
+            nextButton.href = "";
+            nextLink.style.display = "none";
+        } else {
+            nextButton.removeAttribute("disabled");
+            nextLink.style.display = "block";
+        }
+    }
+
+    async function fetchPage(limit, offset, currentCuponSettings) {
+        var baseUrl = "/ajaxSearch?region=" + currentCuponSettings.get('region') + "&coinsMin=" + currentCuponSettings.get('coinsMin') + "&coinsMax=" + currentCuponSettings.get('coinsMax') + "&expire=" + currentCuponSettings.get('expire') + "&limit=" + limit + "&offset=" + offset;
+        
+        var response = await fetch(baseUrl);
+
+        if (response.ok) {
+            var multi = await response.json();
+            var coupons = multi.coupons;
+            var count = multi.count;
+
+            var dynamicCode = "";
+
+            var dynamicCode1 = 
+            '<div class="column is-one-third">' + 
+                '<div class="card">' + 
+                    '<div class="card-image">' + 
+                        '<figure class="image is-4by3">' + 
+                            '<img style="object-fit:cover" src="';
+            
+            var dynamicCode2 =
+                        '</figure>' + 
+                    '</div>' + 
+                    '<div class="card-content">' + 
+                        '<div class="content">' + 
+                            '<h2 class="title has-text-warning">' + 
+                                '<a class="has-text-warning" href="/details/';
+            var dynamicCode3 =
+                            '</p>' + 
+                        '</div>' + 
+                    '</div>' + 
+                '</div>' + 
+            '</div>';
+
+            coupons.forEach(function (coupon) {
+                dynamicCode += 
+                dynamicCode1 + coupon.image + '" alt="Restaurant image">' + 
+                dynamicCode2 + coupon.id + '">' + 
+                coupon.restaurant + 
+                                '</a>' + 
+                            '</h2>' + 
+                            '<p>' + coupon.detail + '</p>' + 
+                            '<p>' + 
+                                '<span class="icon">' + 
+                                    '<i class="fas fa-coins"></i>' + 
+                                '</span>' + 
+                                coupon.coins + 
+                dynamicCode3;
+            });
+            document.querySelector("#content").innerHTML = dynamicCode;
+
+            setAjaxPagination(limit, offset, currentCuponSettings, count);
+        } else {
+            alert(response.status + ": " + response.statusText);
+        }
+    };
+
+    async function submitForm(formElem) {
+        fetchPage(2, 0, new FormData(formElem));
+    };
+
+    async function defaultAccess() {
+        var url = "/ajaxSearch?region=&coinsMin=&coinsMax=&expire=&limit=2&offset=0";
+        var response = await fetch(url);
+
+        if (response.ok) {
+            var multi = await response.json();
+            var coupons = multi.coupons;
+            var count = multi.count;
+
+            var dynamicCode = "";
+
+            var dynamicCode1 = 
+            '<div class="column is-one-third">' + 
+                '<div class="card">' + 
+                    '<div class="card-image">' + 
+                        '<figure class="image is-4by3">' + 
+                            '<img style="object-fit:cover" src="';
+            
+            var dynamicCode2 =
+                        '</figure>' + 
+                    '</div>' + 
+                    '<div class="card-content">' + 
+                        '<div class="content">' + 
+                            '<h2 class="title has-text-warning">' + 
+                                '<a class="has-text-warning" href="/details/';
+
+            var dynamicCode3 =
+                            '</p>' + 
+                        '</div>' + 
+                    '</div>' + 
+                '</div>' + 
+            '</div>';
+
+            coupons.forEach(function (coupon) {
+                dynamicCode += 
+                dynamicCode1 + coupon.image + '" alt="Restaurant image">' + 
+                dynamicCode2 + coupon.id + '">' + 
+                coupon.restaurant + 
+                                '</a>' + 
+                            '</h2>' + 
+                            '<p>' + coupon.detail + '</p>' + 
+                            '<p>' + 
+                                '<span class="icon">' + 
+                                    '<i class="fas fa-coins"></i>' + 
+                                '</span>' + 
+                                coupon.coins + 
+                dynamicCode3;
+            });
+            document.querySelector("#content").innerHTML = dynamicCode;
+            
+            var currentCuponSettings = new FormData();
+            currentCuponSettings.append("region", "");
+            currentCuponSettings.append("coinsMin", "");
+            currentCuponSettings.append("coinsMax", "");
+            currentCuponSettings.append("expire", "");
+
+            setAjaxPagination(2, 0, currentCuponSettings, count);
+        }
+    }
+
+    defaultAccess();
+</script>
