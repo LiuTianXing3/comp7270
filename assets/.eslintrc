@@ -16,6 +16,7 @@
   // (See .eslintrc in the root directory of this Sails app for more context.)
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+  
   "extends": [
     "../.eslintrc"
   ],

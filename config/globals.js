@@ -11,6 +11,7 @@
 
 module.exports.globals = {
 
+  
   /****************************************************************************
   *                                                                           *
   * Whether to expose the locally-installed Lodash as a global variable       *

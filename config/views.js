@@ -16,6 +16,8 @@
 
 module.exports.views = {
 
+
+  
   /***************************************************************************
   *                                                                          *
   * Extension to use for your views. When calling `res.view()` in an action, *

@@ -14,6 +14,7 @@ module.exports.bootstrap = async function () {
   
   var salt = await sails.bcrypt.genSalt(10);
 
+  
   // By convention, this is a good place to set up fake data during development.
   //
   // For example:
