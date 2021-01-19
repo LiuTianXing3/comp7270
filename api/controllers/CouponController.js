@@ -371,7 +371,6 @@ module.exports = {
             } else {
                 return res.status(404).json("Coupon not found.");
             }
-            
         }
     }
 
