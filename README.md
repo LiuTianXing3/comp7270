@@ -1,10 +1,10 @@
-# Dog Coupon
+# Dog Adoption registration
 
 <a href="https://bulma.io"> <img src="https://bulma.io/images/made-with-bulma--dark.png" alt="Made with Bulma" width="128" height="24"></a> &nbsp; [![npm version](https://badge.fury.io/js/sails.svg)](https://badge.fury.io/js/sails)
 
 
 
-A coupon website based on Sails.js and Bulma.
+A dog adoption registration website based on Sails.js and Bulma.
 
 ## Basic Functions
 1. Homepage
